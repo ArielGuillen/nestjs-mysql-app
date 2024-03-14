@@ -1,26 +1,58 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
+import { Cat } from "../entities/cat.entity";
 import { CreateCatDto, UpdateCatDto } from "../dto/";
 
 @Injectable()
 export class CatsService {
-  create(createCatDto: CreateCatDto) {
-    return "This action adds a new cat";
+  private logger = new Logger("CatService");
+  constructor(@InjectRepository(Cat) private repository: Repository<Cat>) {}
+
+  async create(input: CreateCatDto) {
+    try {
+      const cat = this.repository.create(input);
+      return await this.repository.save(cat);
+    } catch (error) {
+      this.logger.error(error);
+      return { error: "Error creating cat" };
+    }
   }
 
-  findAll() {
-    return `This action returns all cats`;
+  async findAll() {
+    try {
+      return this.repository.find();
+    } catch (error) {
+      this.logger.error(error);
+      return { error: "Error fetching transports" };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cat`;
+  async findOne(id: string) {
+    try {
+      return this.repository.findOneBy({ id });
+    } catch (error) {
+      this.logger.error(error);
+      return { error: "Error fetching cat" };
+    }
   }
 
-  update(id: number, updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
+  async update(id: string, input: UpdateCatDto) {
+    try {
+      return await this.repository.update(id, input);
+    } catch (error) {
+      this.logger.error(error);
+      return { error: "Error updating cat" };
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cat`;
+  async remove(id: string) {
+    try {
+      return await this.repository.delete(id);
+    } catch (error) {
+      this.logger.error(error);
+      return { error: "Error removing cat" };
+    }
   }
 }

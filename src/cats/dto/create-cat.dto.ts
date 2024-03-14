@@ -1,1 +1,7 @@
-export class CreateCatDto {}
+import { IsString } from "class-validator";
+
+export class CreateCatDto {
+  @IsString()
+  name: string;
+}
+
