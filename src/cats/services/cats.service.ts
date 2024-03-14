@@ -23,7 +23,7 @@ export class CatsService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<Response<Cat[]>> {
     try {
       const cats = await this.repository.find();
       return Response.success(cats);
@@ -33,7 +33,7 @@ export class CatsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Response<Cat>> {
     try {
       const cat = await this.repository.findOneBy({ id });
       if (!cat) return Response.error("Cat not found", 404);
@@ -44,7 +44,7 @@ export class CatsService {
     }
   }
 
-  async update(id: string, input: UpdateCatDto) {
+  async update(id: string, input: UpdateCatDto): Promise<Response<Cat>> {
     try {
       const cat = await this.repository.update(id, input);
       if (cat.affected == 0) return Response.error("Cat not found", 404);
@@ -55,7 +55,7 @@ export class CatsService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<Response<{ id: string; message: string }>> {
     try {
       const response = await this.repository.delete(id);
       if (response.affected === 0) return Response.error("Cat not found", 404);
