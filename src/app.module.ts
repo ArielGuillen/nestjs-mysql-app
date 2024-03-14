@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { DBConfigService } from "@/config/";
+import { CatsModule } from "./cats/cats.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { DBConfigService } from "@/config/";
     TypeOrmModule.forRootAsync({
       useClass: DBConfigService,
     }),
+    CatsModule,
   ],
 })
 export class AppModule {}
