@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import { Response } from "@/common";
 
 import { CatsService } from "../services/cats.service";
-import { CreateCatDto, UpdateCatDto } from "../dto/";
+import { CreateCatDto } from "../dto/";
 
 @Controller("cats")
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
-
-  @Post()
-  create(@Body() createCatDto: CreateCatDto) {
-    return this.catsService.create(createCatDto);
-  }
+  constructor(private readonly service: CatsService) {}
 
   @Get()
-  findAll() {
-    return this.catsService.findAll();
+  async findAll(): Promise<any> {
+    const response = await this.service.findAll();
+    if (response.error) Response.exception(response.error, response.status);
+    return response.data;
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.catsService.findOne(id);
+  async findOne(@Param("id") id: string): Promise<any> {
+    const response = await this.service.findOne(id);
+    if (response.error) Response.exception(response.error, response.status);
+    return response.data;
+  }
+
+  @Post()
+  @HttpCode(201)
+  async create(@Body() input: CreateCatDto): Promise<any> {
+    const response = await this.service.create(input);
+    if (response.error) Response.exception(response.error, response.status);
+    return response.data;
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateCatDto: UpdateCatDto) {
-    return this.catsService.update(id, updateCatDto);
+  async update(@Param("id") id: string, @Body() input: CreateCatDto): Promise<any> {
+    const response = await this.service.update(id, input);
+    if (response.error) Response.exception(response.error, response.status);
+    return response.data;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.catsService.remove(id);
+  async remove(@Param("id") id: string): Promise<any> {
+    const response = await this.service.remove(id);
+    if (response.error) Response.exception(response.error, response.status);
+    return response.data;
   }
 }
