@@ -1,0 +1,17 @@
+dist
+test
+node_modules
+README.md
+build
+Dockerfile
+.git
+.gitignore
+nest.sh
+.vscode
+.env
+config
+.eslintrc.js
+.prettierrc
+commitlint.config.js
+docker-compose.yaml
+.github
